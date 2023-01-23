@@ -5,8 +5,7 @@ const users = [];
 const server = http.createServer((request, response) => {
   const { method, url } = request;
 
-  if (method === 'GET' && url === '/users') { 
-    //return response.end(users) --> vai dar erro. 
+  if (method === 'GET' && url === '/users') {  
     return response
     .setHeader('Content-type', 'application/json')
     .end(JSON.stringify(users))
