@@ -1,25 +1,19 @@
 import http from "node:http";
-import { Transform } from "node:stream";
 
-class InverseNumberStream extends Transform {
-  _transform(chunk, encoding, callback) {
-    const transformed = Number(chunk.toString()) * -1;
+const server =  http.createServer( async (request, response) => {
+  const buffers = [];
 
-    console.log(transformed);
-
-    callback(null, Buffer.from(String(transformed)));
+  for await (const chunk of request) {
+    buffers.push(chunk);
   }
-}
 
-// request => ReadableStream
-// response => WritableStream
+  const fullStreamContent = Buffer.concat(buffers).toString();
 
-const server =  http.createServer((request, response) => {
-  return request
-    .pipe(new InverseNumberStream())
-    .pipe(response);
+  console.log(fullStreamContent);
+
+  return response.end(fullStreamContent);
 });
 
 server.listen(3334, () => {
   console.log("Server runing 💜💜");
-})
+});
